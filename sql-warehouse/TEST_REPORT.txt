@@ -1,0 +1,26 @@
+================================================================
+ sql-warehouse - TEST REPORT
+ Date (UTC): 2026-09-23 00:14
+ Machine: no SQL Server present (no sqlcmd/LocalDB/service/Docker)
+================================================================
+
+--- tools/mock_sql_test.py (static contract check) ---
+PASS bronze/01_bronze_load_template.sql
+PASS silver/02_silver_cleanse_template.sql
+PASS gold/03_gold_star_schema_template.sql
+
+3 files checked, 0 failure(s).
+MOCK RUN PASSED (static validation only — execute in SSMS/sqlcmd for a live test).
+
+--- tools/live_parse_test.py (sqlglot tsql grammar parse) ---
+PASS bronze\01_bronze_load_template.sql [batch 1]
+PASS gold\03_gold_star_schema_template.sql [batch 1]
+PASS gold\03_gold_star_schema_template.sql [batch 2]
+PASS gold\03_gold_star_schema_template.sql [batch 3]
+PASS silver\02_silver_cleanse_template.sql [batch 1]
+
+5 batches parsed, 0 error(s).
+LIVE PARSE PASSED (grammar check via sqlglot tsql dialect).
+'PRINT 'DQ PASS (bronze): load landed with batch lineage intact.'' contains unsupported syntax. Falling back to parsing as a 'Command'.
+'PRINT 'DQ PASS (gold): FK integrity holds, fact keys unique.'' contains unsupported syntax. Falling back to parsing as a 'Command'.
+'PRINT 'DQ PASS (silver): keys unique, no unexpected NULLs.'' contains unsupported syntax. Falling back to parsing as a 'Command'.
